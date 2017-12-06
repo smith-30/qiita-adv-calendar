@@ -17,13 +17,13 @@ type (
 	}
 )
 
-func NewAggregater(wg *sync.WaitGroup, cap int) *Aggregater {
+func NewAggregater(cap int) *Aggregater {
 	aCh := make(chan *model.Grid, cap)
 	d := NewDispatcher(aCh)
 	d.Start()
 
 	return &Aggregater{
-		wg:          wg,
+		wg:          new(sync.WaitGroup),
 		dispatcher:  d,
 		aggregateCh: aCh,
 	}
@@ -67,4 +67,8 @@ func (a *Aggregater) Output() {
 	for _, g := range a.grids {
 		fmt.Printf("%v, %v, %v\n\n", g.Like, g.Title, g.QiitaURL)
 	}
+}
+
+func (a *Aggregater) Wait() {
+	a.wg.Wait()
 }

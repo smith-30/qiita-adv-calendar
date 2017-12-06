@@ -33,9 +33,9 @@ type (
 	}
 )
 
-func NewCalendars(name string, count int, wg *sync.WaitGroup) *Calendars {
+func NewCalendars(name string, count int) *Calendars {
 	cs := &Calendars{
-		wg: wg,
+		wg: new(sync.WaitGroup),
 	}
 
 	for i := 1; i <= count; i++ {
@@ -55,6 +55,10 @@ func (cs *Calendars) addCalendar(name string) {
 		URL: url,
 	}
 	cs.C = append(cs.C, c)
+}
+
+func (cs *Calendars) Wait() {
+	cs.wg.Wait()
 }
 
 func (cs *Calendars) FetchGrids(gridUpdateCh chan *Grid) {

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"sync"
-
 	"github.com/smith-30/qiita-adv-calendar/domain/model"
 	"github.com/smith-30/qiita-adv-calendar/domain/service"
 	"github.com/smith-30/qiita-adv-calendar/helper/env"
@@ -17,16 +15,13 @@ func main() {
 	env.LoadEnv()
 	cap := 25 * count
 
-	gridWg := new(sync.WaitGroup)
-	aggregateWg := new(sync.WaitGroup)
-
-	ag := service.NewAggregater(aggregateWg, cap)
+	ag := service.NewAggregater(cap)
 	gridUpdateCh := ag.UpdateGrid(cap)
 
-	cs := model.NewCalendars(name, count, gridWg)
+	cs := model.NewCalendars(name, count)
 	cs.FetchGrids(gridUpdateCh)
 
-	gridWg.Wait()
+	cs.Wait()
 	close(gridUpdateCh)
-	aggregateWg.Wait()
+	ag.Wait()
 }
