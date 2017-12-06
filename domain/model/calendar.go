@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/url"
 	"strings"
+	"sync"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -16,7 +17,8 @@ const (
 
 type (
 	Calendars struct {
-		C []*Calendar
+		C  []*Calendar
+		wg *sync.WaitGroup
 	}
 
 	Calendar struct {
@@ -31,8 +33,10 @@ type (
 	}
 )
 
-func NewCalendars(name string, count int) *Calendars {
-	cs := &Calendars{}
+func NewCalendars(name string, count int, wg *sync.WaitGroup) *Calendars {
+	cs := &Calendars{
+		wg: wg,
+	}
 
 	for i := 1; i <= count; i++ {
 		if i == 1 {
@@ -51,6 +55,20 @@ func (cs *Calendars) addCalendar(name string) {
 		URL: url,
 	}
 	cs.C = append(cs.C, c)
+}
+
+func (cs *Calendars) FetchGrids(gridUpdateCh chan *Grid) {
+	for _, ca := range cs.C {
+		cs.wg.Add(1)
+		go func(c *Calendar) {
+			gridCh := c.SetExecuteURLs()
+
+			for g := range gridCh {
+				gridUpdateCh <- g
+			}
+			cs.wg.Done()
+		}(ca)
+	}
 }
 
 func (c *Calendar) SetExecuteURLs() <-chan *Grid {

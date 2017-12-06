@@ -15,25 +15,16 @@ var (
 
 func main() {
 	env.LoadEnv()
+	cap := 25 * count
+
 	gridWg := new(sync.WaitGroup)
 	aggregateWg := new(sync.WaitGroup)
 
-	ag := service.NewAggregater(aggregateWg, 25*count)
-	gridUpdateCh := ag.UpdateGrid(25 * count)
+	ag := service.NewAggregater(aggregateWg, cap)
+	gridUpdateCh := ag.UpdateGrid(cap)
 
-	cs := model.NewCalendars(name, count)
-
-	for _, ca := range cs.C {
-		gridWg.Add(1)
-		go func(c *model.Calendar) {
-			gridCh := c.SetExecuteURLs()
-
-			for g := range gridCh {
-				gridUpdateCh <- g
-			}
-			gridWg.Done()
-		}(ca)
-	}
+	cs := model.NewCalendars(name, count, gridWg)
+	cs.FetchGrids(gridUpdateCh)
 
 	gridWg.Wait()
 	close(gridUpdateCh)
