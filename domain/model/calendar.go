@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"log"
 	"net/url"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
 const (
-	baseUrl = "https://qiita.com/advent-calendar/2017/"
+	baseUrl    = "https://qiita.com/advent-calendar/2017/"
+	apiBaseUrl = "https://qiita.com/api/v2/items/"
 )
 
 type (
@@ -22,9 +24,10 @@ type (
 	}
 
 	Grid struct {
-		URL   string
-		Title string
-		Like  int
+		URL      string
+		QiitaURL string
+		Title    string
+		Like     int
 	}
 )
 
@@ -54,8 +57,9 @@ func (c *Calendar) SetExecuteURLs() <-chan *Grid {
 	gridCh := make(chan *Grid, 25)
 
 	go func() {
+		defer close(gridCh)
+
 		doc, err := goquery.NewDocument(c.URL)
-		// log.Print("parse: ", c.URL)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -70,9 +74,11 @@ func (c *Calendar) SetExecuteURLs() <-chan *Grid {
 			}
 
 			if result.Host == "qiita.com" {
+				i := getItemID(u)
 				g := &Grid{
-					URL:   u,
-					Title: a.Text(),
+					URL:      apiBaseUrl + i,
+					QiitaURL: u,
+					Title:    a.Text(),
 				}
 				gridCh <- g
 			}
@@ -80,4 +86,10 @@ func (c *Calendar) SetExecuteURLs() <-chan *Grid {
 	}()
 
 	return gridCh
+}
+
+func getItemID(url string) string {
+	spr := strings.Split(url, "/")
+	id := spr[len(spr)-1]
+	return id
 }
