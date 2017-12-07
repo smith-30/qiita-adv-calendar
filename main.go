@@ -15,13 +15,17 @@ func main() {
 	env.LoadEnv()
 	cap := 25 * count
 
+	// ready grid.
 	ag := service.NewAggregater(cap)
 	gridUpdateCh := ag.UpdateGrid(cap)
 
+	// fetch grids each calendar.
 	cs := model.NewCalendars(name, count)
 	cs.FetchGrids(gridUpdateCh)
 
+	// wait to send grid.
 	cs.Wait()
 	close(gridUpdateCh)
+	// wait aggregate.
 	ag.Wait()
 }
