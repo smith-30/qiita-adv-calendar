@@ -27,4 +27,5 @@ Thumbs.db
 vendor/
 /build/bin/*
 !/build/bin/.gitkeep
+qiita-adv-calendar
 
