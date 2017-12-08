@@ -21,6 +21,13 @@ $ dep ensure -v
 $ go run main.go
 ```
 
+### Todo
+
+- [ ] implement grid proxy.
+- [ ] make it a CLI that can set parameters.
+
+- [ ] more fast.
+
 ### License
 
 qiita-adv-calendar is licensed under the the MIT license. Please see the LICENSE file for details.
