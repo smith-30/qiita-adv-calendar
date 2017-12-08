@@ -23,4 +23,4 @@ $ go run main.go
 
 ### License
 
-go-goo.gl-parser is licensed under the the MIT license. Please see the LICENSE file for details.
+qiita-adv-calendar is licensed under the the MIT license. Please see the LICENSE file for details.
