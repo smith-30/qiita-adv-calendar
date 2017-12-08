@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/smith-30/qiita-adv-calendar/domain/model"
+	"go.uber.org/zap"
 )
 
 type (
@@ -14,10 +15,12 @@ type (
 		dispatcher  *Dispatcher
 		aggregateCh chan *model.Grid
 		grids       []*model.Grid
+
+		logger *zap.SugaredLogger
 	}
 )
 
-func NewAggregater(cap int) *Aggregater {
+func NewAggregater(cap int, l *zap.SugaredLogger) *Aggregater {
 	aCh := make(chan *model.Grid, cap)
 	d := NewDispatcher(aCh)
 	d.Start()
@@ -26,6 +29,7 @@ func NewAggregater(cap int) *Aggregater {
 		wg:          new(sync.WaitGroup),
 		dispatcher:  d,
 		aggregateCh: aCh,
+		logger:      l,
 	}
 }
 
@@ -42,11 +46,14 @@ func (a *Aggregater) UpdateGrid(cap int) chan *model.Grid {
 		for g := range ch {
 			a.dispatcher.Add(g)
 		}
+		a.logger.Info("update each grid is finished.")
 	}()
 
 	go a.wg.Add(1)
+
 	go func() {
 		defer func() {
+			a.logger.Info("start sort. output ranking...\n")
 			a.Output()
 			a.wg.Done()
 		}()
