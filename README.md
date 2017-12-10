@@ -21,8 +21,10 @@ $ mv .env.sample .env
 $ vi .env
 $ dep ensure -v
 $ make build
+$ ./build/bin/qiita-adv -n <calendar-name> -c <calendar-count>
 # ex.
 $ ./build/bin/qiita-adv -n go -c 4
+$ ./build/bin/qiita-adv -n vue -c 4
 ```
 
 ### Todo
