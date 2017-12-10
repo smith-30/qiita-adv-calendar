@@ -14,17 +14,20 @@ Please get it from console.developers.google.com.
 ## how to use
 
 ```bash
-$ git clone git@github.com:smith-30/qiita-adv-calendar.git
+$ go get github.com/smith-30/qiita-adv-calendar
+$ cd $GOPATH/src/github.com/smith-30/qiita-adv-calendar
 $ mv .env.sample .env
 # edit .env
+$ vi .env
 $ dep ensure -v
-$ go run main.go
+$ make build
+# ex.
+$ ./build/bin/qiita-adv -n go -c 4
 ```
 
 ### Todo
 
 - [ ] implement grid proxy.
-- [ ] make it a CLI that can set parameters.
 
 - [ ] more fast.
 

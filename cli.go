@@ -65,6 +65,3 @@ func (cli *CLI) Run(args []string) int {
 
 	return ExitCodeOK
 }
-
-// Boot
-// CliConfig
