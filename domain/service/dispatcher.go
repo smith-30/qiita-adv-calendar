@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/smith-30/qiita-adv-calendar/domain/model"
+	"go.uber.org/zap"
 )
 
 // refs　http://blog.kaneshin.co/entry/2016/08/18/190435
@@ -23,7 +24,7 @@ const (
 	maxQueues   = 100
 )
 
-func NewDispatcher(aggregateCh chan *model.Grid) *Dispatcher {
+func NewDispatcher(aggregateCh chan *model.Grid, l *zap.SugaredLogger) *Dispatcher {
 	d := &Dispatcher{
 		pool:  make(chan *fetcher, maxfetchers),
 		queue: make(chan interface{}, maxQueues),
@@ -38,6 +39,8 @@ func NewDispatcher(aggregateCh chan *model.Grid) *Dispatcher {
 			quit:        make(chan struct{}),
 			aggregateCh: aggregateCh,
 			token:       os.Getenv("AUTH_TOKEN"),
+
+			logger: l,
 		}
 		d.fetchers[i] = &w
 	}

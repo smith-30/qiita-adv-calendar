@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/smith-30/qiita-adv-calendar/domain/model"
 	"go.uber.org/zap"
@@ -22,7 +23,7 @@ type (
 
 func NewAggregater(cap int, l *zap.SugaredLogger) *Aggregater {
 	aCh := make(chan *model.Grid, cap)
-	d := NewDispatcher(aCh)
+	d := NewDispatcher(aCh, l)
 	d.Start()
 
 	return &Aggregater{
@@ -34,7 +35,7 @@ func NewAggregater(cap int, l *zap.SugaredLogger) *Aggregater {
 }
 
 func (a *Aggregater) UpdateGrid(cap int) chan *model.Grid {
-	ch := make(chan *model.Grid, cap)
+	gridUpdateCh := make(chan *model.Grid, cap)
 	a.wg.Add(1)
 
 	go func() {
@@ -43,7 +44,7 @@ func (a *Aggregater) UpdateGrid(cap int) chan *model.Grid {
 			a.dispatcher.Wait()
 			close(a.aggregateCh)
 		}()
-		for g := range ch {
+		for g := range gridUpdateCh {
 			a.dispatcher.Add(g)
 		}
 		a.logger.Info("update each grid is finished.")
@@ -62,7 +63,7 @@ func (a *Aggregater) UpdateGrid(cap int) chan *model.Grid {
 		}
 	}()
 
-	return ch
+	return gridUpdateCh
 }
 
 // refs https://mattn.kaoriya.net/software/lang/go/20161004092237.htm
@@ -72,6 +73,7 @@ func (a *Aggregater) Output() {
 	})
 
 	for _, g := range a.grids {
+		time.Sleep(100 * time.Millisecond)
 		fmt.Printf("%v, %v, %v\n\n", g.Like, g.Title, g.QiitaURL)
 	}
 }

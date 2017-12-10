@@ -2,12 +2,13 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/pkg/errors"
 	"github.com/smith-30/qiita-adv-calendar/domain/model"
+
+	"go.uber.org/zap"
 )
 
 type (
@@ -17,6 +18,8 @@ type (
 		quit        chan struct{}
 		aggregateCh chan *model.Grid
 		token       string
+
+		logger *zap.SugaredLogger
 	}
 )
 
@@ -35,8 +38,9 @@ func (f *fetcher) start() {
 					// update grid.
 					info, err := f.fetchGridInfo(g.URL)
 					if err != nil {
-						fmt.Printf("%v\n", err)
+						f.logger.Errorf("%v\n", err)
 					} else {
+						f.logger.Infof("success api request %s", g.URL)
 						g.Like = info.LikesCount
 						f.aggregateCh <- g
 					}
