@@ -10,8 +10,8 @@ func Test_fetcher_fetchGridInfo(t *testing.T) {
 	}
 	got, err := f.fetchGridInfo("https://qiita.com/api/v2/items/4ecc3421f2995b207284")
 	if err != nil {
-		t.Logf("%v\n", err)
+		t.Errorf("%v\n", err)
 	} else {
-		t.Logf("%v\n", got.LikesCount)
+		t.Logf("\n\nsuccess %v\n", got.LikesCount)
 	}
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/smith-30/qiita-adv-calendar/domain/model"
 )
 
-// refs http://blog.kaneshin.co/entry/2016/08/18/190435
+// refs　http://blog.kaneshin.co/entry/2016/08/18/190435
 type (
 	Dispatcher struct {
 		pool     chan *fetcher
