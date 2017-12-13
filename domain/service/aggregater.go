@@ -73,7 +73,7 @@ func (a *Aggregater) Output() {
 	})
 
 	for _, g := range a.grids {
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 		fmt.Printf("%v, %v, %v\n\n", g.Like, g.Title, g.QiitaURL)
 	}
 }
