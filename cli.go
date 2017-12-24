@@ -61,6 +61,7 @@ func (cli *CLI) Run(args []string) int {
 	ga.Wait()
 	s.Info("finished FetchGrids.")
 	close(gridUpdateCh)
+
 	// wait aggregate.
 	ag.Wait()
 

@@ -42,12 +42,12 @@ func (a *Aggregater) UpdateGrid(cap int) chan *model.Grid {
 		defer func() {
 			a.wg.Done()
 			a.dispatcher.Wait()
+			a.logger.Info("update each grid is finished.")
 			close(a.aggregateCh)
 		}()
 		for g := range gridUpdateCh {
 			a.dispatcher.Add(g)
 		}
-		a.logger.Info("update each grid is finished.")
 	}()
 
 	go a.wg.Add(1)

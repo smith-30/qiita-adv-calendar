@@ -20,13 +20,15 @@ type (
 )
 
 const (
-	maxfetchers = 3
-	maxQueues   = 100
+	// worker数
+	maxFetchers = 10
+
+	maxQueues = 100
 )
 
 func NewDispatcher(aggregateCh chan *model.Grid, l *zap.SugaredLogger) *Dispatcher {
 	d := &Dispatcher{
-		pool:  make(chan *fetcher, maxfetchers),
+		pool:  make(chan *fetcher, maxFetchers),
 		queue: make(chan interface{}, maxQueues),
 		quit:  make(chan struct{}),
 	}
