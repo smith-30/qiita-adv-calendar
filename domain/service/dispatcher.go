@@ -34,7 +34,9 @@ func NewDispatcher(aggregateCh chan *model.Grid, l *zap.SugaredLogger) *Dispatch
 	}
 
 	d.fetchers = make([]*fetcher, cap(d.pool))
-	for i := 0; i < cap(d.pool); i++ {
+
+	c := cap(d.pool)
+	for i := 0; i < c; i++ {
 		w := fetcher{
 			dispatcher:  d,
 			data:        make(chan interface{}),
