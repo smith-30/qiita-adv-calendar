@@ -52,13 +52,13 @@ func (cs *GridAggregater) FetchGrids(gridUpdateCh chan *model.Grid) {
 	for _, ca := range cs.C {
 		cs.wg.Add(1)
 		go func(c *model.Calendar) {
+			defer cs.wg.Done()
 			cs.logger.Infof("calendar %s is start.", c.URL)
 			gridCh := c.SetExecuteURLs()
 
 			for g := range gridCh {
 				gridUpdateCh <- g
 			}
-			cs.wg.Done()
 		}(ca)
 	}
 }

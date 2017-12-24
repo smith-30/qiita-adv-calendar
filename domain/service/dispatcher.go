@@ -21,7 +21,7 @@ type (
 
 const (
 	// worker数
-	maxFetchers = 10
+	maxFetchers = 25
 
 	maxQueues = 100
 )
