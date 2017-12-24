@@ -37,7 +37,7 @@ func NewDispatcher(aggregateCh chan *model.Grid, l *zap.SugaredLogger) *Dispatch
 
 	c := cap(d.pool)
 	for i := 0; i < c; i++ {
-		w := fetcher{
+		f := fetcher{
 			dispatcher:  d,
 			data:        make(chan interface{}),
 			quit:        make(chan struct{}),
@@ -46,7 +46,7 @@ func NewDispatcher(aggregateCh chan *model.Grid, l *zap.SugaredLogger) *Dispatch
 
 			logger: l,
 		}
-		d.fetchers[i] = &w
+		d.fetchers[i] = &f
 	}
 	return d
 }
