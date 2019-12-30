@@ -64,18 +64,18 @@ func (c *Calendar) SetExecuteURLs() <-chan *Grid {
 				return false
 			}
 
-			if result.Host == "goo.gl" {
-				u, err = c.parser.DecodeURL(u)
-				if err != nil {
-					c.logger.Errorf("DecodeURL failed: %s", err)
-				}
+			// if result.Host == "goo.gl" {
+			// 	u, err = c.parser.DecodeURL(u)
+			// 	if err != nil {
+			// 		c.logger.Errorf("DecodeURL failed: %s", err)
+			// 	}
 
-				result, err = url.Parse(u)
-				if err != nil {
-					c.logger.Fatal(err)
-					return false
-				}
-			}
+			// 	result, err = url.Parse(u)
+			// 	if err != nil {
+			// 		c.logger.Fatal(err)
+			// 		return false
+			// 	}
+			// }
 
 			c.logger.Infof("get grid url: %s", u)
 

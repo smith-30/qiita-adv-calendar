@@ -50,4 +50,6 @@ type ItemInfo struct {
 		TwitterScreenName string `json:"twitter_screen_name"`
 		WebsiteURL        string `json:"website_url"`
 	} `json:"user"`
+
+	PageViewsCount int `json:"page_views_count"`
 }

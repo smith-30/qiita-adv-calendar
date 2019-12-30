@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -40,7 +41,7 @@ func (f *fetcher) start() {
 					if err != nil {
 						f.logger.Errorf("%v\n", err)
 					} else {
-						f.logger.Infof("success api request %s", g.URL)
+						f.logger.Infof("success api request %s, %d", g.URL, info.PageViewsCount)
 						g.Like = info.LikesCount
 						f.aggregateCh <- g
 					}
@@ -60,6 +61,8 @@ func (f *fetcher) fetchGridInfo(url string) (*model.ItemInfo, error) {
 
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("Authorization", "Bearer "+f.token)
+
+	fmt.Printf("f.token %#v\n", f.token)
 
 	client := new(http.Client)
 	resp, err := client.Do(req)

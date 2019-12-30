@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	baseUrl = "https://qiita.com/advent-calendar/2017/"
+	baseUrl = "https://qiita.com/advent-calendar/2019/techtouch"
 )
 
 type (
@@ -38,8 +38,8 @@ func NewGridAggregater(name string, count int, l *zap.SugaredLogger) *GridAggreg
 	return cs
 }
 
-func (cs *GridAggregater) addCalendar(name string) {
-	url := baseUrl + name
+func (cs *GridAggregater) addCalendar(_ string) {
+	url := baseUrl
 	c := model.NewCalendar(url, cs.logger)
 	cs.C = append(cs.C, c)
 }
